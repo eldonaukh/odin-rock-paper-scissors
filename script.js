@@ -11,66 +11,97 @@ function getComputerChoice() {
   }
 }
 
-function getHumanChoice() {
-  let choice = prompt("Please input your choice (rock / paper / scissors): ")
-    .toLowerCase()
-    .trim();
-
-  switch (choice) {
-    case "rock":
-      return "rock";
-    case "paper":
-      return "paper";
-    case "scissors":
-      return "scissors";
-  }
-}
-
 function playGame() {
   let humanScore = 0;
   let computerScore = 0;
 
   function playRound(humanChoice, computerChoice) {
     // your code here!
+    let result = "";
+
     if (humanChoice === computerChoice) {
-      console.log("DRAW! Same choice.");
+      result = "DRAW! Same choice.";
     } else if (humanChoice === "rock" && computerChoice === "paper") {
-      console.log(`You lose! Paper beats Rock.`);
+      result = `You lose! Paper beats Rock.`;
       computerScore++;
     } else if (humanChoice === "rock" && computerChoice === "scissors") {
-      console.log(`You win! Rock beats Scissors.`);
+      result = `You win! Rock beats Scissors.`;
       humanScore++;
     } else if (humanChoice === "paper" && computerChoice === "rock") {
-      console.log(`You win! Paper beats Rock.`);
+      result = `You win! Paper beats Rock.`;
       humanScore++;
     } else if (humanChoice === "paper" && computerChoice === "scissors") {
-      console.log(`You lose! Scissors beat Paper.`);
+      result = `You lose! Scissors beat Paper.`;
       computerScore++;
     } else if (humanChoice === "scissors" && computerChoice === "rock") {
-      console.log(`You lose! Rock beats Scissors.`);
+      result = `You lose! Rock beats Scissors.`;
       computerScore++;
     } else if (humanChoice === "scissors" && computerChoice === "paper") {
-      console.log(`You win! Scissors beat Paper.`);
+      result = `You win! Scissors beat Paper.`;
       humanScore++;
+    }
+
+    const roundResult = document.createElement("p");
+    roundResult.innerText = result;
+    return roundResult;
+  }
+
+  function updateResult(result) {
+    resultDiv.appendChild(result);
+    scores.innerText = `Player score: ${humanScore}\nComputer score: ${computerScore}`;
+
+    let gameResult = "";
+    if (humanScore == 5 || computerScore == 5) {
+      if (humanScore > computerScore) {
+        gameResult = "You win!";
+      } else if (humanScore < computerScore) {
+        gameResult = "Computer wins!";
+      } else {
+        gameResult = "Tie!";
+      }
+
+      const finalResult = document.createElement("h3");
+      finalResult.innerText = gameResult + "\n==============";
+      resultDiv.appendChild(finalResult);
+      humanScore = 0;
+      computerScore = 0;
     }
   }
 
-  for (let i = 0; i < 5; i++) {
-    const humanSelection = getHumanChoice();
-    const computerSelection = getComputerChoice();
+  const body = document.body;
+  const rockBtn = document.createElement("button");
+  const paperBtn = document.createElement("button");
+  const scissorsBtn = document.createElement("button");
 
-    playRound(humanSelection, computerSelection);
-  }
+  const scores = document.createElement("h3");
+  scores.innerText = `Player score: ${humanScore}\nComputer score: ${computerScore}`;
 
-  if (humanScore > computerScore) {
-    console.log("You win!");
-  } else if (humanScore < computerScore) {
-    console.log("Compue wins!");
-  } else {
-    console.log("Tie!");
-  }
-  console.log(`Player score: ${humanScore}`);
-  console.log(`Computer score: ${computerScore}`);
+  const resultDiv = document.createElement("div");
+  const resultTitle = document.createElement("h2");
+  resultTitle.innerText = "Results";
+
+  rockBtn.innerText = "ROCK";
+  rockBtn.addEventListener("click", () => {
+    result = playRound("rock", getComputerChoice());
+    updateResult(result);
+  });
+  paperBtn.innerText = "PAPER";
+  paperBtn.addEventListener("click", () => {
+    result = playRound("paper", getComputerChoice());
+    updateResult(result);
+  });
+  scissorsBtn.innerText = "SCISSORS";
+  scissorsBtn.addEventListener("click", () => {
+    result = playRound("scissors", getComputerChoice());
+    updateResult(result);
+  });
+
+  body.appendChild(rockBtn);
+  body.appendChild(paperBtn);
+  body.appendChild(scissorsBtn);
+  body.appendChild(scores);
+  body.appendChild(resultDiv);
+  resultDiv.appendChild(resultTitle);
 }
 
 playGame();
